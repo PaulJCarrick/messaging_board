@@ -70,5 +70,6 @@ Rails.application.routes.draw do
   #     resources :products
   #   end
 
+  devise_for :users, controllers: { sessions: "sessions" }
   root to: "post#index"
 end
