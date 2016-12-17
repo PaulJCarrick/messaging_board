@@ -1,0 +1,27 @@
+Rails:
+ Enabled: true
+Documentation:
+ Enabled: false
+AllCops:
+ Exclude:
+   - 'Guardfile'
+   - 'Rakefile'
+   - 'config/**/*'
+   - 'db/**/*'
+   - 'spec/**/*'
+   - 'bin/*'
+
+ClassLength:
+  Max: 400
+
+MethodLength:
+  Max: 20
+
+AbcSize:
+  Max: 25
+
+CyclomaticComplexity:
+  Max: 11
+
+PerceivedComplexity:
+  Max: 11

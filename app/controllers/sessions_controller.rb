@@ -8,7 +8,7 @@ class SessionsController < Devise::SessionsController
       redirect_to '/post/index'
     else
       warden.custom_failure!
-      @errors = [ 'Invalid email or password' ]
+      @errors = ['Invalid email or password']
       render 'devise/shared/errors', status: :unauthorized
     end
   end
