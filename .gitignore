@@ -1,12 +1,5 @@
 .rvmrc
 *.komodoproject
-
 *.log
-
 *.pid
-
-*.cache
-
-*.log
-
 *.cache
