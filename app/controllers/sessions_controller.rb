@@ -5,10 +5,11 @@ class SessionsController < Devise::SessionsController
 
     if @user && @user.valid_password?(params[:user][:password])
       sign_in(@user)
+      redirect_to '/post/index'
     else
       warden.custom_failure!
       @errors = [ 'Invalid email or password' ]
-      render 'shared/errors', status: :unauthorized
+      render 'devise/shared/errors', status: :unauthorized
     end
   end
 end

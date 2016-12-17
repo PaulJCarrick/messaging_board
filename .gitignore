@@ -1,2 +1,6 @@
 .rvmrc
 *.komodoproject
+
+*.log
+
+*.pid
