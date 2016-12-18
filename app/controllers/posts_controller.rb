@@ -1,4 +1,4 @@
-class PostController < ApplicationController
+class PostsController < ApplicationController
   before_action :authenticate_user!
   before_action :find_post, only: [:show, :edit, :update, :destroy]
 
@@ -18,7 +18,7 @@ class PostController < ApplicationController
 
   def update
     if @post.update(post_params)
-      redirect_to post_show_path_url
+      redirect_to post_path
     else
       render 'edit'
     end

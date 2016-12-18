@@ -1,6 +1,6 @@
-<%= simple_form_for @post, url: post_create_path_url do |f| %>
+<%= simple_form_for @post do |f| %>
   <%= f.input :title, error: 'Title is mandatory, please specify one' %>
   <%= f.input :body, label: 'Post' %>
   <%= f.button :submit %>
-  <%= link_to "Back to Posts", posts_path_url, class: 'btn btn-default' %>
+  <%= link_to "Back to View Post", posts_path(@post), class: 'btn btn-default' %>
 <% end %>
