@@ -3,3 +3,7 @@
 *.log
 *.pid
 *.cache
+
+.byebug_history
+
+*.sqlite3

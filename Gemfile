@@ -32,9 +32,9 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
+gem 'bootstrap-sass', '~> 3.3', '>= 3.3.7'
 gem 'devise'
 gem 'simple_form', '~> 3.3', '>= 3.3.1'
-gem 'bootstrap-sass', '~> 3.3', '>= 3.3.7'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution
