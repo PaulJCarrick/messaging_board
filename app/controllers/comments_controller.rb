@@ -1,5 +1,5 @@
 class CommentsController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: [:index, :show]
   before_action :set_comment, only: [:show, :edit, :update, :destroy]
 
   # GET /comments
@@ -16,61 +16,86 @@ class CommentsController < ApplicationController
 
   # GET /comments/new
   def new
-    @comment = Comment.new
+    if user_signed_in?
+      @comment = Comment.new
+    else
+      flash[:alert] = 'You must be logged in to comment.'
+      redirect_to root_path
+    end
   end
 
   # GET /comments/1/edit
   def edit
-    render
+    if user_signed_in?
+      render
+    else
+      flash[:alert] = 'You must be logged in to edit a comment.'
+      redirect_to root_path
+    end
   end
 
   # POST /comments
   # POST /comments.json
   def create
-    @comment = Comment.new(comment_params)
+    if user_signed_in?
+      @comment = Comment.new(comment_params)
 
-    respond_to do |format|
-      if @comment.save
-        format.html do
-          redirect_to @comment, notice: 'Comment was successfully created.'
-        end
-        format.json { render :show, status: :created, location: @comment }
-      else
-        format.html { render :new }
-        format.json do
-          render json: @comment.errors, status: :unprocessable_entity
+      respond_to do |format|
+        if @comment.save
+          format.html do
+            redirect_to @comment, notice: 'Comment was successfully created.'
+          end
+          format.json { render :show, status: :created, location: @comment }
+        else
+          format.html { render :new }
+          format.json do
+            render json: @comment.errors, status: :unprocessable_entity
+          end
         end
       end
+    else
+      flash[:alert] = 'You must be logged in to comment.'
+      redirect_to root_path
     end
   end
 
   # PATCH/PUT /comments/1
   # PATCH/PUT /comments/1.json
   def update
-    respond_to do |format|
-      if @comment.update(comment_params)
-        format.html do
-          redirect_to @comment, notice: 'Comment was successfully updated.'
-        end
-        format.json { render :show, status: :ok, location: @comment }
-      else
-        format.html { render :edit }
-        format.json do
-          render json: @comment.errors, status: :unprocessable_entity
+    if user_signed_in?
+      respond_to do |format|
+        if @comment.update(comment_params)
+          format.html do
+            redirect_to @comment, notice: 'Comment was successfully updated.'
+          end
+          format.json { render :show, status: :ok, location: @comment }
+        else
+          format.html { render :edit }
+          format.json do
+            render json: @comment.errors, status: :unprocessable_entity
+          end
         end
       end
+    else
+      flash[:alert] = 'You must be logged in to edit a comment.'
+      redirect_to root_path
     end
   end
 
   # DELETE /comments/1
   # DELETE /comments/1.json
   def destroy
-    @comment.destroy
-    respond_to do |format|
-      format.html do
-        redirect_to comments_url, notice: 'Comment was successfully destroyed.'
+    if user_signed_in?
+      @comment.destroy
+      respond_to do |format|
+        format.html do
+          redirect_to comments_url, notice: 'Comment was destroyed.'
+        end
+        format.json { head :no_content }
       end
-      format.json { head :no_content }
+    else
+      flash[:alert] = 'You must be logged in to edit a comment.'
+      redirect_to root_path
     end
   end
 

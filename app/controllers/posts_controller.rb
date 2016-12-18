@@ -1,35 +1,69 @@
 class PostsController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: [:index, :show]
   before_action :find_post, only: [:show, :edit, :update, :destroy]
 
   def new
-    @post = current_user.posts.build
+    if user_signed_in?
+      @post = current_user.posts.build
+    else
+      flash[:alert] = 'You must be logged in to Post.'
+
+      redirect_to root_path
+    end
   end
 
   def create
-    @post = current_user.posts.build(post_params)
+    if user_signed_in?
+      @post = current_user.posts.build(post_params)
 
-    if @post.save
-      redirect_to root_path
+      if @post.save
+        redirect_to root_path
+      else
+        flash[:alert] = 'There was a problem saving the post.'
+
+        render 'new'
+      end
     else
-      render 'new'
+      flash[:alert] = 'You must be logged in to Post.'
+
+      redirect_to root_path
     end
   end
 
   def update
-    if @post.update(post_params)
+    if !user_signed_in?
+      flash[:alert] = 'You must be logged in to Post.'
+      redirect_to root_path
+    elsif @post.user_id != current_user.try(:id)
+      flash[:alert] = "You cannot update another user's post!"
+      redirect_to root_path
+    elsif @post.update(post_params)
       redirect_to post_path
     else
+      flash[:alert] = 'There was a problem updating the post.'
+
       render 'edit'
     end
   end
 
   def edit
-    render
+    if user_signed_in?
+      render
+    else
+      flash[:alert] = 'You must be logged in to Edit a Post.'
+      redirect_to root_path
+    end
   end
 
   def destroy
-    @post.destroy
+    if !user_signed_in?
+      flash[:alert] = 'You must be logged in to delete.'
+    elsif @post.user_id != current_user.try(:id)
+      flash[:alert] = "You cannot delete another user's post!"
+    else
+      @post.destroy
+    end
+
     redirect_to root_path
   end
 
