@@ -1,7 +1,8 @@
 <% @posts.each do |post| %>
-   <div class="col-md-4">
-      <div class='message'>
-         <h1 class='message-title'><%= post.title %></h1>
+   <div class="col-md-6">
+      <div class='post'>
+         <h1 class='post-title'><%= post.title %></h1>
+         <p class='post-by'>Posted by <%= post.user.name %> at <%= time_ago_in_words(post.created_at) %> ago.</p>
          <%= link_to "View Post", post_path(post), class: 'btn btn-custom' %>
 
          <% if post.user_id == current_user.try(:id) %>

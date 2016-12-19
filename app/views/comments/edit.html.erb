@@ -1,5 +1,13 @@
-<h1>Editing Comment</h1>
-<%= simple_form_for([@post, @comment]) do |f| %>
-<%= f.input :body, label: 'Comment' %>
-<%= f.button:submit %>
-<% end %>
+<div class='col-md-11 col-md-offest-1'>
+  <div class='post-show'>
+    <h1>Editing Comment</h1>
+    <%= simple_form_for([@post, @comment]) do |f| %>
+    <%= f.input :body, label: 'Comment' %>
+    <%= f.button:submit, class: "btn-custom"  %>
+    <% end %>
+    <p>&nbsp</p>
+    <% if @post.id %>
+      <%= link_to "Back to View Post", post_path(@post), class: 'btn btn-custom' %>
+    <% end %>
+  </div>
+</div>
