@@ -6,7 +6,7 @@ class CommentsController < ApplicationController
   # GET /comments
   # GET /comments.json
   def index
-    @comments = Comment.all
+    @comments = Comment.all.order('created_at DESC')
   end
 
   # GET /comments/1
@@ -29,6 +29,9 @@ class CommentsController < ApplicationController
   def edit
     if user_signed_in?
       render
+    elsif @comment.user_id != current_user.try(:id)
+      flash[:alert] = "You cannot edit another user's comment!"
+      redirect_to root_path
     else
       flash[:alert] = 'You must be logged in to edit a comment.'
       redirect_to root_path
@@ -57,7 +60,11 @@ class CommentsController < ApplicationController
   # PATCH/PUT /comments/1
   def update
     if user_signed_in?
-      if @comment.update(comment_params)
+      if @comment.user_id != current_user.try(:id)
+        flash[:alert] = "You cannot update another user's comment!"
+
+        redirect_to root_path
+      elsif @comment.update(comment_params)
         redirect_to post_path(@post)
       else
         flash[:alert] = 'Cannot update comment.'
@@ -74,8 +81,15 @@ class CommentsController < ApplicationController
   # DELETE /comments/1
   def destroy
     if user_signed_in?
-      @comment.destroy
-      redirect_to post_path(@post)
+      if @comment.user_id != current_user.try(:id)
+        flash[:alert] = "You cannot delete another user's comment!"
+
+        redirect_to root_path
+      else
+        @comment.destroy
+
+        redirect_to post_path(@post)
+      end
     end
   end
 
