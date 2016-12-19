@@ -48,6 +48,7 @@ group :development, :test do
   gem 'rspec-rails'
 
   gem 'terminal-notifier-guard', require: false
+  gem 'capybara', '~> 2.4', '>= 2.4.0'
 end
 
 group :development do
