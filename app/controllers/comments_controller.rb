@@ -1,6 +1,7 @@
 class CommentsController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
-  before_action :set_comment, only: [:show, :edit, :update, :destroy]
+  before_action :find_post
+  before_action :find_comment, only: [:show, :edit, :update, :destroy]
 
   # GET /comments
   # GET /comments.json
@@ -35,23 +36,17 @@ class CommentsController < ApplicationController
   end
 
   # POST /comments
-  # POST /comments.json
   def create
     if user_signed_in?
-      @comment = Comment.new(comment_params)
+      @comment         = @post.comments.create(comment_params)
+      @comment.user_id = current_user.id
 
-      respond_to do |format|
-        if @comment.save
-          format.html do
-            redirect_to @comment, notice: 'Comment was successfully created.'
-          end
-          format.json { render :show, status: :created, location: @comment }
-        else
-          format.html { render :new }
-          format.json do
-            render json: @comment.errors, status: :unprocessable_entity
-          end
-        end
+      if @post.save
+        redirect_to post_path(@post)
+      else
+        flash[:alert] = 'There was a problem saving the comment.'
+
+        render 'new'
       end
     else
       flash[:alert] = 'You must be logged in to comment.'
@@ -60,46 +55,39 @@ class CommentsController < ApplicationController
   end
 
   # PATCH/PUT /comments/1
-  # PATCH/PUT /comments/1.json
   def update
     if user_signed_in?
-      respond_to do |format|
-        if @comment.update(comment_params)
-          format.html do
-            redirect_to @comment, notice: 'Comment was successfully updated.'
-          end
-          format.json { render :show, status: :ok, location: @comment }
-        else
-          format.html { render :edit }
-          format.json do
-            render json: @comment.errors, status: :unprocessable_entity
-          end
-        end
+      if @comment.update(comment_params)
+        redirect_to post_path(@post)
+      else
+        flash[:alert] = 'Cannot update comment.'
+
+        render 'edit'
       end
     else
       flash[:alert] = 'You must be logged in to edit a comment.'
+
       redirect_to root_path
     end
   end
 
   # DELETE /comments/1
-  # DELETE /comments/1.json
   def destroy
     if user_signed_in?
       @comment.destroy
-      respond_to do |format|
-        format.html do
-          redirect_to comments_url, notice: 'Comment was destroyed.'
-        end
-        format.json { head :no_content }
-      end
-    else
-      flash[:alert] = 'You must be logged in to edit a comment.'
-      redirect_to root_path
+      redirect_to post_path(@post)
     end
   end
 
   private
+
+  def find_post
+    @post = Post.find(params[:post_id])
+  end
+
+  def find_comment
+    @comment = @post.comments.find(params[:id])
+  end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_comment
@@ -109,6 +97,6 @@ class CommentsController < ApplicationController
   # Never trust parameters from the scary internet, only allow the white list
   # through.
   def comment_params
-    params.fetch(:comment, {})
+    params.require(:comment).permit(:body)
   end
 end
