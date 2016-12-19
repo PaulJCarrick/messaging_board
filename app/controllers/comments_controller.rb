@@ -41,7 +41,7 @@ class CommentsController < ApplicationController
       @comment         = @post.comments.create(comment_params)
       @comment.user_id = current_user.id
 
-      if @post.save
+      if @comment.save
         redirect_to post_path(@post)
       else
         flash[:alert] = 'There was a problem saving the comment.'
