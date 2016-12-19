@@ -81,16 +81,16 @@ class CommentsController < ApplicationController
 
   # DELETE /comments/1
   def destroy
-    if user_signed_in?
-      if @comment.user_id != current_user.try(:id)
-        flash[:alert] = "You cannot delete another user's comment!"
+    return unless user_signed_in?
 
-        redirect_to root_path
-      else
-        @comment.destroy
+    if @comment.user_id != current_user.try(:id)
+      flash[:alert] = "You cannot delete another user's comment!"
 
-        redirect_to post_path(@post)
-      end
+      redirect_to root_path
+    else
+      @comment.destroy
+
+      redirect_to post_path(@post)
     end
   end
 
