@@ -2,7 +2,7 @@
   <p class="comment-content">
     <%=comment.body%>
   </p>
-  <p class="comment-posted-by">Posted by <%= comment.user.try(:email) %> at <%= time_ago_in_words(comment.created_at) %> ago.</p>
+  <p class="comment-posted-by">Posted by <%= comment.user.name %> at <%= time_ago_in_words(comment.created_at) %> ago.</p>
   <div class="links">
     <% if comment.user_id == current_user.try(:id) %>
       <%= link_to 'Edit',   edit_post_comment_path(comment.post, comment) %>

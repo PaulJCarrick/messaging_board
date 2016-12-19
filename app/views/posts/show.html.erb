@@ -1,7 +1,7 @@
 <div class='col-md-8 col-md-offest-2'>
   <div class='message-show'>
     <h1><%= @post.title %></h1>
-    <p class="message-posted-by">Posted by <%= @post.user.email %> at <%= time_ago_in_words(@post.created_at) %> ago.</p>
+    <p class="message-posted-by">Posted by <%= @post.user.name %> at <%= time_ago_in_words(@post.created_at) %> ago.</p>
     <p class="message-desc"><%= @post.body %></p>
     <h3>Comments:</h3>
     <%= render @post.comments %>
