@@ -1,7 +1,7 @@
 <div class='col-md-11 col-md-offest-1'>
   <div class='post-show'>
     <h1><%= @post.title %></h1>
-    <p class="post-desc"><%= @post.body.gsub('\n', "\n") %></p>
+    <p class="post-desc"><%= simple_format(@post.body) if @post.body.present? %></p>
     <p class="post-posted-by">Posted by <%= @post.user.name %> at <%= time_ago_in_words(@post.created_at) %> ago.</p>
     <div class="links btn-group">
       <% if @post.user_id == current_user.try(:id) %>
