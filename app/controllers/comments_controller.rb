@@ -4,13 +4,11 @@ class CommentsController < ApplicationController
   before_action :find_comment, only: [:show, :edit, :update, :destroy]
 
   # GET /comments
-  # GET /comments.json
   def index
     @comments = Comment.all.order('created_at DESC')
   end
 
   # GET /comments/1
-  # GET /comments/1.json
   def show
     render
   end
@@ -31,9 +29,11 @@ class CommentsController < ApplicationController
       render
     elsif @comment.user_id != current_user.try(:id)
       flash[:alert] = "You cannot edit another user's comment!"
+
       redirect_to root_path
     else
       flash[:alert] = 'You must be logged in to edit a comment.'
+
       redirect_to root_path
     end
   end
@@ -53,6 +53,7 @@ class CommentsController < ApplicationController
       end
     else
       flash[:alert] = 'You must be logged in to comment.'
+
       redirect_to root_path
     end
   end
